@@ -1,0 +1,81 @@
+{
+  "DEFAULT": {
+    "PARTNER_CODE": "evc2101",
+    "HOSPITAL_CODE": "9999999999",
+    "HOSPITAL_SEQ": 360,
+    "SIDO_CODE": 31,
+    "SIGUNGU_CODE": 310403,
+    "MASTER_KEY": "promptics",
+    "SECRET_KEY" : "prompticscoreapi",
+    "NOTIFICATION_MESSAGE_TEMPLATE": {
+      "CLAIM_COMPLETED" : "ics-006",
+      "DOCUMENT_REQUEST" : "ics-001",
+      "FAX_NUMBER_REQUEST" : "ics-002",
+      "LIFEPLANET": "evcare_lifeplanet_01"
+    }
+  },
+  "DEVELOPMENT": {
+    "ENV": "development",
+    "DEBUG": true,
+    "DB": {
+      "DATABASE_URI": "mysql://evcare_dev:ecdev33333333!@evcare-001.crok8ei7e0kf.ap-northeast-2.rds.amazonaws.com/ics_development?charset=utf8mb4",
+      "POOL_SIZE": 5,
+      "MAX_OVERFLOW": 10,
+      "POOL_RECYCLE": 1
+    },
+    "API_URL": "http://dev.ics.evcare.kr",
+    "WEB_URL": "dev.iccw.evcare.kr",
+    "CONTENTS_PATH": "/EBS_Data/www/ics/contents",
+    "NOTIFICATION": {
+      "ITU": "82",
+      "API_URL": "https://alimtalk-api.bizmsg.kr/v2/sender/send",
+      "USER_ID": "ahnmi422",
+      "PROFILE": "18cf06274ff4396c775161bb749ae6038eda0a73",
+      "BUTTON_URL": "http://{}/addition/statusApplication?claimId={}"
+    },
+    "S3": {
+      "AWS_ACCESS_KEY": "AKIAZN52LFVGGF3WXV5Q",
+      "AWS_SECRET_KEY": "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",
+      "BUCKET_NAME": "evcare-s3-002",
+      "DEV_BUCKET_NAME": "evcare-s3-002",
+      "REGION": "ap-northeast-2"
+    },
+    "WS": {
+      "URL": "/EBS_Data/www/CONTENTS-STORAGE/ics",
+      "BUCKET": "evcare-s3-002",
+      "DEV_BUCKET": "evcare-s3-002"
+    }
+  },
+  "PRODUCTION": {
+    "ENV": "production",
+    "DEBUG": false,
+    "DB": {
+      "DATABASE_URI": "mysql://evcare:ecdb33333333!@evcare-001.crok8ei7e0kf.ap-northeast-2.rds.amazonaws.com/ics_production?charset=utf8mb4",
+      "POOL_SIZE": 5,
+      "MAX_OVERFLOW": 20,
+      "POOL_RECYCLE": 1
+    },
+    "API_URL": "https://ics.evcare.kr",
+    "WEB_URL": "iccw.evcare.kr",
+    "CONTENTS_PATH": "/EBS_Data/www/ics/contents",
+    "NOTIFICATION": {
+      "ITU": "82",
+      "API_URL": "https://alimtalk-api.bizmsg.kr/v2/sender/send",
+      "USER_ID": "ahnmi422",
+      "PROFILE": "18cf06274ff4396c775161bb749ae6038eda0a73",
+      "BUTTON_URL": "http://{}/addition/statusApplication?claimId={}"
+    },
+    "S3": {
+      "AWS_ACCESS_KEY": "AKIAZN52LFVGGF3WXV5Q",
+      "AWS_SECRET_KEY": "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",
+      "BUCKET_NAME": "evcare-s3-001",
+      "DEV_BUCKET_NAME": "evcare-s3-002",
+      "REGION": "ap-northeast-2"
+    },
+    "WS": {
+      "URL": "/EBS_Data/www/CONTENTS-STORAGE/ics",
+      "BUCKET": "evcare-s3-001",
+      "DEV_BUCKET": "evcare-s3-002"
+    }
+  }
+}
