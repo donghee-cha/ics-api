@@ -3,7 +3,7 @@ import json
 
 from api import SessionLocal
 from api.config import notification_message_template, notification_config, default_hospital_code, \
-    default_hospital_sido_code
+    default_hospital_sido_code, default_hospital_sigungu_code
 from api.model.district_sido import DistrictSidoClass
 from api.model.district_sigungu import DistrictSigunguClass
 from api.model.hospital import HospitalClass
@@ -31,7 +31,7 @@ def save_sign_insurance_find(data, header):
 
     template_id = ''
     sido_code = default_hospital_sido_code
-    sigungu_code = default_hospital_sido_code
+    sigungu_code = default_hospital_sigungu_code
 
     db = SessionLocal()
     cipher = AESCipher()
@@ -54,38 +54,42 @@ def save_sign_insurance_find(data, header):
 
         if partner_info.count() > 0:
 
+            get_partner_info = partner_info.first().__dict__
             # 신청 정보 저장
-            if partner_info['hospital_seq'] > 0:
+            if get_partner_info['hospital_seq'] > 0:
                 hospital_info = db.query(HospitalClass).filter_by(
-                    seq=partner_info['hospital_seq'], active=1)
+                    seq=get_partner_info['hospital_seq'], active=1)
 
                 if hospital_info.count() == 0:
                     hospital_info = db.query(HospitalClass).filter_by(code=default_hospital_code)
 
-                hospital_info = hospital_info.first().__dict__
-                hospital_name = hospital_info['name']
-                hospital_code = hospital_info['code']
+                get_hospital_info = hospital_info.first().__dict__
+                hospital_name = get_hospital_info['name']
+                hospital_code = get_hospital_info['code']
 
                 # 병원코드가 기본코드가 아닐경우에만 시도, 시군구 코드를 가져옴
                 if hospital_code != default_hospital_code:
                     sido_code = int(hospital_code[0:2])
                     sigungu_code = int(hospital_code[0:6])
+                logger.info(f'<<<<<sido_code: {sido_code}>>>>>')
+                logger.info(f'<<<<<sigungu_code: {sigungu_code}>>>>>')
+                sido_info = db.query(DistrictSidoClass).filter_by(code=sido_code, active=1)
+                sigungu_info = db.query(DistrictSigunguClass).filter_by(code=sigungu_code, active=1)
 
-                sido_info = db.query(DistrictSidoClass).filter_by(code=sido_code, active=1).first().__dict__
-                sigungu_info = db.query(DistrictSigunguClass).filter_by(code=sigungu_code, active=1).first().__dict__
+                get_sido_info = sido_info.first().__dict__
+                get_sigungu_info = sigungu_info.first().__dict__
 
                 new_benefit_history = SignInsuranceFindApplicant(
                     device_code=data['device'],
                     device_use_date=current_time_stamp,
                     applicant_id='EVCARE',
-                    applicant_name='',
                     applicant_cellphone=encrypt_cellphone,
                     hospital_name=hospital_name,
                     hospital_code=hospital_code,
-                    district_sido_code=sido_info['code'],
-                    district_sido_name=sido_info['name'],
-                    district_sigungu_code=sigungu_info['code'],
-                    district_sigungu_name=sigungu_info['name'],
+                    district_sido_code=get_sido_info['code'],
+                    district_sido_name=get_sido_info['name'],
+                    district_sigungu_code=get_sigungu_info['code'],
+                    district_sigungu_name=get_sigungu_info['name'],
                     create_date=current_time_stamp
                 )
                 try:
@@ -94,8 +98,7 @@ def save_sign_insurance_find(data, header):
 
                     if get_message_template.count() > 0:
 
-                        partner_info = partner_info.first().__dict__
-                        secret_key = partner_info['partner_secret_key']
+                        secret_key = get_partner_info['partner_secret_key']
                         decrypt_cellphone = cipher.decrypt(secret_key, encrypt_cellphone)
 
                         notification_message = get_message_template.first().message

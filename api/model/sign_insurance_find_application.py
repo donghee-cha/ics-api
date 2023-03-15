@@ -11,7 +11,6 @@ class SignInsuranceFindApplicant(Base):
     device_code = Column(NVARCHAR(length=200), nullable=False, default="")
     device_use_date = Column(BigInteger, nullable=False, default=0)
     applicant_id = Column(NVARCHAR(length=100), nullable=False, default="")
-    applicant_name = Column(NVARCHAR(length=100), nullable=False, default="")
     applicant_cellphone = Column(NVARCHAR(length=200), nullable=False, default="")
     hospital_name = Column(NVARCHAR(length=200), nullable=False, default="")
     hospital_code = Column(NVARCHAR(length=20), nullable=False, default="")
