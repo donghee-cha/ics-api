@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-from api.service.v1.send import save_send_notification
+from api.service.v1.sign_insurance import save_sign_insurance_find
 
 from api.util.helper.decorator import token_required, nocache
 from api.util.reponse_message import response_message_handler
@@ -22,7 +22,7 @@ def find():
         :return: WelcomeSchema().dump(result), 200
         """
     try:
-        return save_send_notification(data=request.form.to_dict(), header=request.headers)
+        return save_sign_insurance_find(data=request.form.to_dict(), header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
         return response_message_handler(400)
