@@ -12,6 +12,7 @@ from api.model.message_template import MessageTemplateClass
 from api.model.notification_send_log import NotificationSendLog
 from api.model.partner import PartnerClass
 from api.model.benefit_application import BenefitApplicationClass
+from api.model.sign_insurance_find_application import SignInsuranceFindApplicant
 from api.util.helper.decorator import parameter_validation
 from api.util.helper.time import convertTimeToYYYYMMDDList, currentKorTimestamp
 from api.util.plugin.cipher import AESCipher
@@ -73,7 +74,7 @@ def save_sign_insurance_find(data, header):
                 sido_info = db.query(DistrictSidoClass).filter_by(code=sido_code, active=1).first().__dict__
                 sigungu_info = db.query(DistrictSigunguClass).filter_by(code=sigungu_code, active=1).first().__dict__
 
-                new_benefit_history = BenefitApplicationClass(benefit_code='LIFEPLANET',
+                new_benefit_history = SignInsuranceFindApplicant(
                                                               device_code=data['device'],
                                                               device_use_date=current_time_stamp,
                                                               applicant_id='EVCARE',
@@ -85,10 +86,6 @@ def save_sign_insurance_find(data, header):
                                                               district_sido_name=sido_info['name'],
                                                               district_sigungu_code=sigungu_info['code'],
                                                               district_sigungu_name=sigungu_info['name'],
-                                                              partner_code='evc2271',
-                                                              partner_recommender='',
-                                                              birthday_year='',
-                                                              gender='',
                                                               create_date=current_time_stamp
                                                               )
                 try:
