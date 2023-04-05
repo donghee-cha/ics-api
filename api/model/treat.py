@@ -19,6 +19,7 @@ class TreatClass(Base):
     hospital_seq = Column(BigInteger, nullable=False, default=0)
     ec_code = Column(NVARCHAR(length=200), nullable=False, default="")
     name = Column(NVARCHAR(length=200), autoincrement=False, default="")
+    active = Column(Integer, nullable=False, default=1)
     create_date = Column(BigInteger, nullable=False, default=0)
     update_date = Column(BigInteger, nullable=False, default=0)
 

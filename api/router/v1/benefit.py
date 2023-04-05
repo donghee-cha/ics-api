@@ -19,7 +19,7 @@ def info():
         return get_benefit_info(data=request.args.to_dict(), header=request.headers)
     except Exception as error:
         logger.error(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)
 
 
 @benefit_api.route("/participate", methods=["POST"])
@@ -30,4 +30,4 @@ def participate():
         return set_benefit_participate(data=request.form.to_dict(), header=request.headers)
     except Exception as error:
         logger.error(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)

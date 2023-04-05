@@ -23,10 +23,6 @@ logger = logging.getLogger(__name__)
 def get_thirdparty_terms(data, header):
     db = SessionLocal()
     try:
-
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
-
         auth_token = header['Auth-Token']
 
         partner_info = db.query(PartnerClass).filter_by(partner_auth_token=auth_token)

@@ -4,8 +4,8 @@ import json
 from api import SessionLocal
 
 from api.model.insurance import InsuranceClass
+from api.util.helper.decorator import parameter_validation
 from api.util.reponse_message import response_message_handler
-from api.util.plugin.cipher import AESCipher
 
 import logging
 
@@ -17,14 +17,11 @@ logger = logging.getLogger(__name__)
 
 """
 
-
+@parameter_validation(requires={})
 def get_insurance_terms_list(data, header):
     db = SessionLocal()
     try:
 
-        cipher = AESCipher()
-
-        print(cipher.decrypt('publicndscoreapi', 'HCrjePTrFbQGbalucXpYMg=='))
         set_insurance_terms_list = []
 
         logger.debug("header : {}".format(header))
@@ -79,7 +76,6 @@ def get_insurance_terms_list(data, header):
                                                     is_need_agree=False,
                                                     policy_name='',
                                                     policy_information='')
-
 
                 set_insurance_terms_list.append(set_insurance_terms_info)
 

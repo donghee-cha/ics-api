@@ -68,6 +68,7 @@ def hospital_info():
         logger.critical(error, exc_info=True)
         return response_message_handler(500)
 
+
 @information_api.route("/work", methods=["GET"])
 @nocache
 @token_required

@@ -4,6 +4,7 @@ import json
 from api import SessionLocal
 
 from api.model.insurance import InsuranceClass
+from api.util.helper.decorator import parameter_validation
 from api.util.reponse_message import response_message_handler
 
 import logging
@@ -16,15 +17,15 @@ logger = logging.getLogger(__name__)
 
 """
 
-
+@parameter_validation(requires={})
 def get_insurance_terms_list(data, header):
     db = SessionLocal()
     try:
 
         set_insurance_terms_list = []
 
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
+        logger.debug("header : {}".format(header))
+        logger.debug("data : {}".format(data))
 
         if 'insurance_code_list' in data and data['insurance_code_list'] != '':
             insurance_code_list = []

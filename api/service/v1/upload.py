@@ -35,8 +35,8 @@ def upload_document(data, header):
 
     try:
 
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
+        logger.debug("header : {}".format(header))
+        logger.debug("data : {}".format(data))
 
         cipher = AESCipher()
         send_notification = SendNotification(api_url=notification_config['API_URL'],

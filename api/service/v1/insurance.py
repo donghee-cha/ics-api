@@ -5,7 +5,6 @@ from api import SessionLocal
 from api.model.claim_history import ClaimClass
 from api.util.helper.decorator import parameter_validation
 from api.util.helper.time import currentUTCTimestamp
-from api.util.plugin.cipher import AESCipher
 from api.util.reponse_message import response_message_handler
 
 import logging

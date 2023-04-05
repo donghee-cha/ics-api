@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 insurant_api = Blueprint('dev_insurant', __name__)
 
+
 @insurant_api.route("/info", methods=["GET", "POST"])
 @nocache
 @token_required

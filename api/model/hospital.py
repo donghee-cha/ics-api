@@ -9,7 +9,7 @@ class HospitalClass(Base):
     __table_args__ = {"extend_existing": True}
 
     seq = Column(BigInteger, autoincrement=True, primary_key=True)
-    treat_type = Column(Integer, nullable=False, default=10)
+    medicine_type = Column(Integer, nullable=False, default=10)
     code = Column(NVARCHAR(length=20), nullable=False, default="")
     external_name = Column(NVARCHAR(length=200), nullable=False, default="")
     name = Column(NVARCHAR(length=200), nullable=False, default="")

@@ -32,8 +32,8 @@ ics 보험청구 정보 가져오기
 def get_insurance_claim_info(data, header):
     db = SessionLocal()
     try:
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
+        logger.debug("header : {}".format(header))
+        logger.debug("data : {}".format(data))
 
         partner_info = db.query(PartnerClass).filter_by(partner_auth_token=header['Auth-Token'])
 

@@ -1,4 +1,3 @@
-
 from flask import Blueprint, request
 
 from api.service.dev.beneficiary import (save_beneficiary_history, get_beneficiary_history,
@@ -19,7 +18,6 @@ beneficiary_api = Blueprint('dev_beneficiary', __name__)
 @nocache
 @token_required
 def info():
-
     try:
         if request.method == 'GET':
             return get_beneficiary_history(data=request.args.to_dict(), header=request.headers)
@@ -28,7 +26,7 @@ def info():
 
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)
 
 
 @beneficiary_api.route("/signature", methods=["POST"])
@@ -47,7 +45,8 @@ def signature():
 
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)
+
 
 @beneficiary_api.route("/work", methods=["GET", "POST"])
 @nocache
@@ -67,4 +66,4 @@ def work():
 
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)

@@ -3,11 +3,15 @@ import gc
 from api import SessionLocal
 from api.config import default_hospital_seq
 from api.model.bank import BankClass
+from api.model.hospital import HospitalClass
 
 from api.model.insurance import InsuranceClass
+from api.model.kiosk_service import KioskServiceClass
 from api.model.partner import PartnerClass
+from api.model.partner_relationship import PartnerRelationshipClass
 from api.model.treat import TreatClass
 from api.model.work import WorkClass
+from api.util.helper.decorator import parameter_validation
 from api.util.reponse_message import response_message_handler
 
 import logging
@@ -21,6 +25,7 @@ logger = logging.getLogger(__name__)
 """
 
 
+@parameter_validation(requires={})
 def get_insurance_company_list(data, header):
     db = SessionLocal()
 
@@ -77,13 +82,14 @@ def get_insurance_company_list(data, header):
 """
 
 
+@parameter_validation(requires={})
 def get_bank_company_list(data, header):
     db = SessionLocal()
 
     try:
         set_bank_list = []
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
+        logger.debug("header : {}".format(header))
+        logger.debug("data : {}".format(data))
 
         if 'bank_code' in data and data['bank_code'] != '':
             bank_info = db.query(BankClass).filter_by(ec_code=data['bank_code']).order_by(BankClass.order,
@@ -135,26 +141,40 @@ def get_bank_company_list(data, header):
 """
 
 
+@parameter_validation(requires={})
 def get_hospital_info(data, header):
+    auth_token = header['Auth-Token']
+    device_code = '' if 'device_code' not in data or data['device_code'] == '' else data['device_code']
+
     db = SessionLocal()
 
     try:
 
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
-
         set_hospital_info = dict()
         set_treat_department_list = []
+        ga_partner_code = ''
 
         week_day_list = ["일", "월", "화", "수", "목", "금", "토"]
 
-        partner_info = db.query(PartnerClass).filter_by(partner_auth_token=header['Auth-Token'])
+        partner_info = db.query(PartnerClass.hospital_seq,
+                                PartnerClass.partner_code,
+                                PartnerClass.partner_name,
+                                PartnerClass.partner_address,
+                                PartnerClass.logo_image_url,
+                                PartnerClass.active_week,
+                                PartnerClass.active_time,
+                                HospitalClass.medicine_type).join(HospitalClass,
+                                                                  HospitalClass.seq == PartnerClass.hospital_seq). \
+            filter(PartnerClass.partner_auth_token == auth_token)
 
         # 파라미터를 통해 불러오는 파트너사 정보가 없다면, 기본 hospital_seq의 파트너사 정보를 불러온다.
         if partner_info.count() > 0:
-
-            get_partner_info = partner_info.first().__dict__
+            get_partner_info = partner_info.first()._asdict()
             hospital_seq = get_partner_info['hospital_seq']
+
+            treat_department_list = db.query(TreatClass).filter_by(hospital_seq=hospital_seq).order_by(
+                TreatClass.order, TreatClass.name)
+
             set_hospital_info['name'] = get_partner_info['partner_name']
             set_hospital_info['address'] = get_partner_info['partner_address']
             set_hospital_info['logo_image_url'] = get_partner_info['logo_image_url']
@@ -181,9 +201,7 @@ def get_hospital_info(data, header):
                     get_active_time = get_active_time.replace(',', '~')
 
             set_hospital_info['active_time'] = get_active_time
-
-            treat_department_list = db.query(TreatClass).filter_by(hospital_seq=hospital_seq).order_by(
-                TreatClass.order, TreatClass.name)
+            set_hospital_info['medicine_type'] = get_partner_info['medicine_type']
 
             if treat_department_list.count() > 0:
 
@@ -211,6 +229,19 @@ def get_hospital_info(data, header):
 
             set_hospital_info['treat_department_list'] = set_treat_department_list
 
+            ## GA 파트너사 코드 불러오기
+            if device_code != '':
+                partner_relationship_info = db.query(PartnerRelationshipClass.partner_code).join(
+                    KioskServiceClass,
+                    PartnerRelationshipClass.workspace_partner_code == KioskServiceClass.ec_partner_code). \
+                    filter(KioskServiceClass.device_code == device_code, KioskServiceClass.signage_flag == False,
+                           PartnerRelationshipClass.partner_code != PartnerRelationshipClass.workspace_partner_code)
+
+                if partner_relationship_info.count() > 0:
+                    ga_partner_code = partner_relationship_info.first()._asdict()['partner_code']
+
+            set_hospital_info['ga_partner_code'] = ga_partner_code
+
             del treat_department_list
             del partner_info
 
@@ -224,6 +255,7 @@ def get_hospital_info(data, header):
     finally:
         db.close()
         gc.collect()
+
 
 """
 

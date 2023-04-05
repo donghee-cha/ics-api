@@ -25,7 +25,7 @@ def insurant():
         return upload_signature_insurant(data=request.form.to_dict(), header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)
 
 
 @upload_signature_api.route("/beneficiary", methods=["POST"])
@@ -41,4 +41,4 @@ def beneficiary():
         return upload_signature_beneficiary(data=request.form.to_dict(), header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)

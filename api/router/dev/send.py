@@ -25,5 +25,5 @@ def notification():
         return save_send_notification(data=request.form.to_dict(), header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)
 

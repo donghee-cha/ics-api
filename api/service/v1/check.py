@@ -20,9 +20,6 @@ def update_kiosk_program_status(data, header):
 
     try:
 
-        logger.debug("header : {}".format(header))
-        logger.debug("data : {}".format(data))
-
         auth_token = header['Auth-Token']
 
         status_message = ''
@@ -34,11 +31,13 @@ def update_kiosk_program_status(data, header):
         if partner_info.count() > 0:
 
             partner_info = partner_info.first().__dict__
-            get_kiosk_info = db.query(KioskServiceClass).filter_by(device_code=data['device_code'],
-                                                                   ec_partner_code=partner_info['partner_code'])
-            if get_kiosk_info.count() > 0:
+            kiosk_info = db.query(KioskServiceClass).filter_by(device_code=data['device_code'],
+                                                               ec_partner_code=partner_info['partner_code'])
+            if kiosk_info.count() > 0:
 
-                new_kiosk_status_log = KioskServiceStatusLog(ec_partner_code=partner_info['partner_code'],
+                get_kiosk_info = kiosk_info.first().__dict__
+
+                new_kiosk_status_log = KioskServiceStatusLog(ec_partner_code=get_kiosk_info['ec_partner_code'],
                                                              device_code=data['device_code'],
                                                              status_check_time=int(data['check_time']),
                                                              status_message=status_message,
@@ -58,6 +57,8 @@ def update_kiosk_program_status(data, header):
                 return response_message_handler(200)
 
             else:
+                logger.info("data : {}".format(data))
+                logger.info("header : {}".format(header))
                 return response_message_handler(204, result_message='해당 키오스크 기기가 파트너사에 일치하지 않습니다.')
 
         else:
@@ -70,3 +71,4 @@ def update_kiosk_program_status(data, header):
     finally:
         db.close()
         gc.collect()
+

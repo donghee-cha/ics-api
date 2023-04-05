@@ -1,11 +1,20 @@
+
 from logging.config import fileConfig
 
+import socket
 import os, json
+import configparser
 
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
 log_file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'logging.ini')
+config = configparser.ConfigParser()
+config.read(log_file_path)
+config.set('handler_logfile', 'args', f"('logs/{socket.gethostbyname(socket.gethostname())}_logging.log', 'midnight', 1 , 0 ,'utf8')")
+
+with open(log_file_path, 'w') as configfile:
+    config.write(configfile)
 fileConfig(log_file_path)
 
 basedir = os.path.abspath(os.path.dirname(__file__))

@@ -37,7 +37,7 @@ def get_signage_info(data, header):
         signage_list = []
 
         partner_info = db.query(PartnerClass).filter_by(partner_auth_token=auth_token, active=1)
-        logger.info(partner_info)
+
         if partner_info.count() > 0:
             partner_info = partner_info.first().__dict__
 

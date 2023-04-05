@@ -26,4 +26,4 @@ def list():
         return get_thirdparty_terms(data=request.args.to_dict(), header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)

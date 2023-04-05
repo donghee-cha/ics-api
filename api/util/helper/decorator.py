@@ -17,10 +17,12 @@ def token_required(f):
     # wraps를 이용해서 감싸져있는 함수를 디버깅 할 수 있다.
     @wraps(f)
     def decorated(*args, **kwargs):
-        logger.info(f"<<<<<<<<<<[REQUEST API HOST ] {request.headers.get('Host')} >>>>>>>>>>>")
+
         data, status = check_header_auth_param(request)
         token = data.get('data')
-        logger.info(f"<<<<<<<<<<[REQUEST API TOKEN ] {token} >>>>>>>>>>>")
+        if request.path != '/v1/check/status' and request.path != '/dev/check/status':
+            logger.info(f"<<<<<<<<<<[REQUEST API HOST ] {request.headers.get('Host')} >>>>>>>>>>>")
+            logger.info(f"<<<<<<<<<<[REQUEST API TOKEN ] {token} >>>>>>>>>>>")
         if not token:
             logger.info("<<<<<<<<<<[ERROR 발생!! ] 토큰이 존재하지 않습니다 >>>>>>>>>>>")
             return json.dumps(data, ensure_ascii=False), status
@@ -57,7 +59,10 @@ def parameter_validation(**config):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            logger.info(f'<<<<<<<<<<[REQUEST API URL ] {request.path} >>>>>>>>>>> ')
+
+            if request.path != '/v1/check/status' and request.path != '/dev/check/status':
+                logger.info(f'<<<<<<<<<<[REQUEST API URL ] {request.path} >>>>>>>>>>> ')
+
             if request.method == 'POST':
 
                 # POST 필수 값 검증

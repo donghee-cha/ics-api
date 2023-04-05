@@ -26,4 +26,4 @@ def list():
         return get_terms(data=request.json, header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)

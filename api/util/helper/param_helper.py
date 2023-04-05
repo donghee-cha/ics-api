@@ -29,7 +29,8 @@ def check_required_param(new_request, requires):
 def check_required_form_data(new_request, requires):
     parameter_dict = new_request.form.to_dict()
     is_validate = 1
-    logger.info("<<<<<<<<<<[REQUEST API PARAMETER ] {} >>>>>>>>>>>".format(parameter_dict))
+    if new_request.path != '/v1/check/status' and new_request.path != '/dev/check/status':
+        logger.info("<<<<<<<<<<[REQUEST API PARAMETER ] {} >>>>>>>>>>>".format(parameter_dict))
     if requires:
         for key in requires:
 

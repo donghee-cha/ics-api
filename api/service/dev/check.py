@@ -19,17 +19,13 @@ def update_kiosk_program_status(data, header):
     db = SessionLocal()
 
     try:
-
-        logger.info("header : {}".format(header))
-        logger.info("data : {}".format(data))
-
         auth_token = header['Auth-Token']
 
         status_message = ''
         if 'message' in data:
             status_message = data['message']
 
-        partner_info = db.query(PartnerClass).filter_by(partner_auth_token=auth_token)
+        partner_info = db.query(PartnerClass).filter_by(partner_auth_token=auth_token, active=0)
 
         if partner_info.count() > 0:
 
@@ -56,6 +52,8 @@ def update_kiosk_program_status(data, header):
                 return response_message_handler(200)
 
             else:
+                logger.info("data : {}".format(data))
+                logger.info("auth_token : {}".format(auth_token))
                 return response_message_handler(204, result_message='해당 키오스크 기기가 파트너사에 일치하지 않습니다.')
 
         else:

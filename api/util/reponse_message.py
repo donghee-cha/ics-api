@@ -31,6 +31,6 @@ def response_message_handler(status_code, **kwargs):
             result[key] = value
     if result['result_code'] != 200:
         logger.info(f'<<<<<<<<<<[RESPONSE API STATUS CODE ] {result} >>>>>>>>>>> ')
-    logger.info(f'<<<<<<<<<<[RESPONSE API MESSAGE ] {result} >>>>>>>>>>> ')
+        logger.info(f'<<<<<<<<<<[RESPONSE API MESSAGE ] {result} >>>>>>>>>>> ')
 
     return json.dumps(result, ensure_ascii=False)

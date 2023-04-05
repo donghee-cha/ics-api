@@ -25,5 +25,5 @@ def document():
         return upload_document(data=request.form.to_dict(), header=request.headers)
     except Exception as error:
         logger.critical(error, exc_info=True)
-        return response_message_handler(400)
+        return response_message_handler(500)
 
